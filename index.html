@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="#">
+    <title>Découverte de Vue js</title>
+</head>
+
+<body>
+
+    <div id="app">
+
+        <p>{{ message }}</p> <!-- Rendu déclaratif -->
+
+        <p v-html="message"></p> <!-- directive pour interpréter le html -->
+
+        <button v-bind:disabled="isDisabled">Cliquer</button>
+        <!-- la directive v-bind:attribut sert à aatacher la valeur d'un attribut à une propriété de l'objet data -->
+
+        <br>
+
+        <p v-if="seen">Lorem ipsum dolor sit amet, consectetur adipisicing elit. In saepe quod ipsa nostrum blanditiis
+            deleniti, quia, vero delectus nesciunt amet magni consequuntur illum sunt autem necessitatibus velit qui.
+            Voluptates, nihil.
+            Earum aperiam perspiciatis unde harum doloremque exercitationem maxime incidunt minus adipisci quis
+            aspernatur veniam et quos, voluptatum excepturi possimus quaerat natus! Corporis eligendi, id hic nesciunt
+            aut cupiditate eos iste?
+            Quidem aut quisquam adipisci voluptas architecto! Qui in eius repellat optio modi asperiores reiciendis!
+            Eveniet quis saepe quae dolore, fugit vitae asperiores facere dolor illum esse nihil aliquam, sint eligendi?
+        </p>
+        <!-- de la meme manière que précédemment, ici le paragraphe n'apparaitra pas dans le DOM que si la propriété seen est à true -->
+        <button v-on:click="ninja">{{ seen ? 'Disparition' : 'Apparation'}}</button>
+        <!-- déclenche une méthode à la détection d'un évenement. Tous les évenements javascript sont disponibles. On rapelle simplement le nom de la fonction qu'on veut lancer à la détection de l'évenement -->
+
+        <ul>
+            <Stagiaire
+            v-for="stagiaire, index in dwwm"
+            v-bind:prenom="stagiaire"
+            v-bind:key="index"
+            v-on:askToSuppress="suppress"
+            />
+            <!-- <li v-for="elem in dwwm">{{ elem }}</li>On peut boucler sur les elements d'une propriété itérable -->
+        </ul>
+        <button v-on:click="suppress('Davy')">Supprimer</button>
+        <input v-model="message" type="text"> <!-- la directive v-model permet d'établir une liaison dans les deux sens entre la saisie d'un utilisateur et la valeur de la propriété correspondante dans l'instance de Vue -->
+
+    </div>
+
+    <script src="https://unpkg.com/vue@3"></script>
+    <script type="module">
+        // On créer une instance de Vue
+        const { createApp } = Vue
+        import Stagiaire from './Stagiaire.js'
+        // On définie cette instance
+        createApp({
+            components: {
+                Stagiaire
+            },
+            //elle contiendra une propriété data (qui est une fonction mais c'est pas grave)
+            data() {
+                return {
+                    message: '<strong>Hello Vue!</strong>',
+                    isDisabled: true,
+                    seen: false,
+                    dwwm: [
+                        'Halima',
+                        'Pati',
+                        'David',
+                        'Davy',
+                        'Alex',
+                        'Melvin',
+                        'Julien P',
+                        'Julien S',
+                        'Kevin',
+                        'Sylvain'
+                    ]
+                }
+            },
+            methods: { // l'objet methods nous permet de définir des fonctions pour notre instance de Vue
+                ninja() {
+                    this.seen = !this.seen  // la fonction modifie la propriété seen par son inverse
+                },
+
+                suppress(prenom){
+                    let index = this.dwwm.indexOf(prenom);
+                    // console.log(prenom)
+                    this.dwwm.splice(index, 1)
+                }
+            }
+        }).mount('#app') //on monte l'application dans la div #app
+    </script>
+</body>
+
+</html>
